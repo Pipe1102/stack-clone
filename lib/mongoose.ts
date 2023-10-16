@@ -7,7 +7,7 @@ export const connectToDatabase = async () => {
   if (!process.env.MONGODB_URL) return console.log("MISSING MONOGDB_URL");
 
   if (isConnected) {
-    console.log("Mongodb is already connected");
+    // console.log("Mongodb is already connected");
   }
 
   try {
@@ -15,6 +15,6 @@ export const connectToDatabase = async () => {
       dbName: "devflow",
     });
     isConnected = true;
-    console.log("Mongodb is connected");
+    // console.log("Mongodb is connected");
   } catch (error) {}
 };

@@ -3,6 +3,8 @@ import React from "react";
 import RenderTag from "../shared/RenderTag";
 import Metric from "../shared/Metric";
 import { formatAndDivideNumber, getTimestamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface Props {
   _id: string;
@@ -15,11 +17,13 @@ interface Props {
     _id: string;
     name: string;
     picture: string;
+    clerkId?: string;
   };
-  upvotes: number;
+  upvotes: string[];
   views: number;
   answers: Array<object>;
   createdAt: Date;
+  clerkId?: string | null;
 }
 const QuestionCard = ({
   _id,
@@ -30,7 +34,10 @@ const QuestionCard = ({
   views,
   answers,
   createdAt,
+  clerkId,
 }: Props) => {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
+
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -44,7 +51,11 @@ const QuestionCard = ({
             </h3>
           </Link>
         </div>
-        {/* add edit button */}
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
@@ -58,7 +69,7 @@ const QuestionCard = ({
       </div>
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
-          imgUrl="/assets/icons/avatar.svg"
+          imgUrl={author.picture}
           alt="user"
           value={author.name}
           title={` - asked ${getTimestamp(createdAt)}`}
@@ -69,7 +80,7 @@ const QuestionCard = ({
         <Metric
           imgUrl="/assets/icons/like.svg"
           alt="Upvotes"
-          value={formatAndDivideNumber(upvotes)}
+          value={formatAndDivideNumber(upvotes.length)}
           title="Votes"
           textStyles="small-medium text-dark400_light800"
         />
