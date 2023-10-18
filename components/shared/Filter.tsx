@@ -7,6 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formUrlQuery } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import React from "react";
 interface Props {
@@ -18,9 +20,25 @@ interface Props {
   containerClasses?: string;
 }
 const Filter = ({ filters, otherClasses, containerClasses }: Props) => {
+  const searchParamas = useSearchParams();
+  const router = useRouter();
+
+  const paramFilter = searchParamas.get("filter");
+
+  const handleUpdateParams = (value: string) => {
+    const newUrl = formUrlQuery({
+      params: searchParamas.toString(),
+      key: "filter",
+      value,
+    });
+    router.push(newUrl, { scroll: false });
+  };
   return (
     <div className={`relative ${containerClasses}`}>
-      <Select>
+      <Select
+        onValueChange={handleUpdateParams}
+        defaultValue={paramFilter || undefined}
+      >
         <SelectTrigger
           className={`${otherClasses} body-regular light-border 
           background-light800_dark300 border px-5 py-2.5`}
