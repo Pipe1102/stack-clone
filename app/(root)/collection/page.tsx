@@ -6,8 +6,13 @@ import LocalSearch from "@/components/shared/search/LocalSearch";
 import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Collection | Dev Overlow",
+};
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
   const result = await getSavedQuestions({
